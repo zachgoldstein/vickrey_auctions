@@ -1,0 +1,10 @@
+<ul>
+    {% for bid in bids %}
+    <li id="bid-{{ bid.id }}">
+        <p>This bid ({{ bid.id }}) has price: {{ bid.price }} and name {{ bid.first_name }} {{bid.last_name}}</p>
+        <button hx-delete="/auctions/bid/{{ bid.id }}" hx-trigger="click" hx-target="#bid-{{ bid.id }}" hx-swap="outerHTML">
+            Click Me!
+        </button>
+    </li>
+    {% endfor %}
+</ul>
