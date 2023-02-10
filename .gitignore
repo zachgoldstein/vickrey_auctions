@@ -1,0 +1,6 @@
+non-technical
+.venv/bin
+.venv/lib
+pyvenv.cfg
+db.sqlite3
+auctionSiteProject/theme/static/css/dist
