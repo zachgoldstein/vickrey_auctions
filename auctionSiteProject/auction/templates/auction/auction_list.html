@@ -1,0 +1,42 @@
+{% extends 'auction_base.html' %}
+
+{% block content %}
+
+<div class="bg-white">
+  <div class="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+    <h2 class="sr-only">Products</h2>
+
+    {% if auction_list %}
+    <div class="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-8">
+
+      {% for auction in auction_list %}
+      {% comment %} Representation of /auction/auction/{{ auction.id }} {% endcomment %}
+      <div class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white">
+        <div class="aspect-w-3 aspect-h-4 bg-gray-200 group-hover:opacity-75 sm:aspect-none sm:h-96">
+          <img src="{{auction.image_uri}}" alt="Eight shirts arranged on table in black, olive, grey, blue, white, red, mustard, and green." class="h-full w-full object-cover object-center sm:h-full sm:w-full">
+        </div>
+        <div class="flex flex-1 flex-col space-y-2 p-4">
+          <h3 class="text-sm font-medium text-gray-900">
+            <a href="{{auction.absolute_url}}">
+              <span aria-hidden="true" class="absolute inset-0"></span>
+              {{ auction.title }}
+            </a>
+          </h3>
+          <p class="text-sm text-gray-500">{{auction.description}}</p>
+          {% comment %} <div class="flex flex-1 flex-col justify-end">
+            <p class="text-sm italic text-gray-500">8 colors</p>
+            <p class="text-base font-medium text-gray-900">$256</p>
+          </div> {% endcomment %}
+        </div>
+      </div>
+      {% endfor %}
+
+      <!-- More products... -->
+    </div>
+    {% else %}
+    <p>No auctions are available.</p>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock content %}

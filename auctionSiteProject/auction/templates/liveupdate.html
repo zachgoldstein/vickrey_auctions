@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>loaded</h1>
+<div hx-get="/auctions/dummyauction" hx-trigger="every 2s" hx-vals='{"id": "{{ id }}"}' >test page</div>
+
+{% endblock %}
+
