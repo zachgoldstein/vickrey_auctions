@@ -1,12 +1,16 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from auction.models import Bid
+from auction.models import Bid, Auction
 
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 class BidListView(ListView):
     model = Bid
+
+class AuctionView(DetailView):
+    model = Auction
+
 
 def index(request):
     allBids = Bid.objects.all()
