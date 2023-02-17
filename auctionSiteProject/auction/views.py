@@ -4,9 +4,13 @@ from django.http import QueryDict
 from django.views.generic import ListView, DetailView
 from django.views import View
 from django.template import loader
-from auction.models import Bid, Auction
+from django.http import JsonResponse
+from django.forms.models import model_to_dict
 
 from time import time
+from typing import cast, List
+
+from auction.models import Bid, Auction
 
 
 class BidListView(ListView):
@@ -27,6 +31,13 @@ class BidCreateView(DetailView):
         template = loader.get_template('bid_confirmation.html')
         return HttpResponse(template.render({"bid":post["bid-value"]}, request))
 
+class BidDataView(DetailView):
+    model = Auction
+
+    def get(self, request, *args, **kwargs):
+        self.object = cast(Auction, self.get_object())
+        return JsonResponse({"prices":[bid.price for bid in self.object.bid_set.all()]})
+
 class AuctionView(DetailView):
     model = Auction
 
@@ -41,6 +52,26 @@ class AuctionView(DetailView):
         auction.save()
         print(f"put request, got auction, {auction}")
         return HttpResponse('PUT request')
+
+# Auction detail page for sellers
+# - Can edit
+# - Can add an update
+# - Can view live stats (real heart of the application)
+class AuctionSellerView(DetailView):
+    model = Auction
+
+    def get(self, request, *args, **kwargs):
+        self.object = cast(Auction, self.get_object())
+        
+        context = self.get_context_data(object=self.object)
+
+        # calculate interesting stats for sellers about this auction
+        context["average_price"] = self.object.calculate_total_average_bid()
+        context["winning_average_price"] = self.object.calculate_winning_average_bid()
+
+        template = loader.get_template('auction/auction_stats.html')
+        return HttpResponse(template.render(context, request))
+
 
 class AuctionListView(ListView):
     model = Auction
