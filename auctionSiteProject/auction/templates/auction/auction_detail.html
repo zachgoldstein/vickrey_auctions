@@ -34,15 +34,22 @@
                         hx-trigger="click"
                         hx-include="[name='bid-value'], [name='auction-id']"
                         hx-post="/bids/create"
-                        hx-swap="none"
                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                        hx-target=".bid-confirmation"
                         >
                         Place Bid
                     </sl-button>
-                    <sl-input placeholder="456" size="large" type="number" name="bid-value">
+                    <sl-input 
+                        placeholder="456" 
+                        size="large" 
+                        type="number" 
+                        name="bid-value"
+                        >
                         <sl-icon name="currency-dollar" slot="prefix"></sl-icon>
                     </sl-input>
                     <input type="hidden" name="auction-id" value="{{auction.id}}">
+                </div>
+                <div class="bid-confirmation mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-1">
                 </div>
             </div>
 

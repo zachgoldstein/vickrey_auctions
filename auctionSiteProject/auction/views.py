@@ -23,7 +23,9 @@ class BidCreateView(DetailView):
         print(f"got auction with id: {auction.id}")
 
         print("created new bid")
-        return HttpResponse('POST request')
+        # return HttpResponse('POST request')
+        template = loader.get_template('bid_confirmation.html')
+        return HttpResponse(template.render({"bid":post["bid-value"]}, request))
 
 class AuctionView(DetailView):
     model = Auction
