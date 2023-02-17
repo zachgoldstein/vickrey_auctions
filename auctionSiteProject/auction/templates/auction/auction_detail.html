@@ -34,6 +34,7 @@
                         hx-trigger="click"
                         hx-include="[name='bid-value'], [name='auction-id']"
                         hx-post="/bids/create"
+                        hx-swap="none"
                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                         >
                         Place Bid

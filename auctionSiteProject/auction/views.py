@@ -19,8 +19,9 @@ class BidCreateView(DetailView):
         post = QueryDict(request.body) 
         print(post)       
         auction = Auction.objects.get(id=post["auction-id"])
+        auction.bid_set.create(price=post["bid-value"])
         print(f"got auction with id: {auction.id}")
-        bid = Bid()
+
         print("created new bid")
         return HttpResponse('POST request')
 

@@ -3,13 +3,6 @@ from django.urls import reverse
 
 import random
 
-class Bid(models.Model):
-    price = models.FloatField()
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
 random_pics = [
     "https://picsum.photos/id/26",
     "https://picsum.photos/id/60",
@@ -40,3 +33,13 @@ class Auction(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Bid(models.Model):
+    price = models.FloatField()
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, blank=True, null=True)
