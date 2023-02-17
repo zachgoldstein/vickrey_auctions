@@ -58,21 +58,6 @@ class AuctionCreateView(DetailView):
 
         return obj
 
-class MyView(View):
-    def put(self, request):
-        # <view logic>
-        # if an unsaved model (no id in params), save new model object
-        return HttpResponse('result')
-
-    # def get_context_data(self, **kwargs):
-    #     # Call the base implementation first to get a context
-    #     context = super().get_context_data(**kwargs)
-    #     # Add in the empty auction object
-    #     context['auction'] = Auction()
-    #     return context
-
-
-
 def index(request):
     allBids = Bid.objects.all()
 
