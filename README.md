@@ -1,4 +1,4 @@
-# Auction site with django
+# Vickrey Auctions with Django & HTMX
 
 This is an application to facilitate vickrey-style auctions.
 
