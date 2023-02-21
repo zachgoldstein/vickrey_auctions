@@ -49,15 +49,17 @@ class Auction(models.Model):
     def __str__(self):
         return self.title
 
-    def calculate_total_average_bid(self) -> float:
+    @property
+    def total_average_bid(self) -> float:
         return calculate_average_bid(list(self.bid_set.all()))
 
-    def calculate_winning_average_bid(self) -> float:
+    @property
+    def winning_average_bid(self) -> float:
         return calculate_top_n_average_bid(self.num_items, list(self.bid_set.all()))
     
     @property
     def recommendations(self) -> List[str]:
-        return get_recommendations(list(self.bid_set.all()))
+        return get_recommendations(self.num_items, list(self.bid_set.all()))
     
     @property
     def winning_bids(self) -> List[Bid]:

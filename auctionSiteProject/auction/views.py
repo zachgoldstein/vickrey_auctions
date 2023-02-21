@@ -41,17 +41,22 @@ class BidDataView(DetailView):
 class AuctionView(DetailView):
     model = Auction
 
+    # Intention is to only set a single field at once, for use by auto-updating inputs
     def put(self, request, *args, **kwargs):
         put = QueryDict(request.body)        
         auction = Auction.objects.get(id=put["id"])
         # Feels unsafe??? just use an allow-list of fields
+        
+        return_value = ""
         for field in Auction._meta.get_fields():
-            if field.name in put:
+            if field.name in put and field.name is not "id":
                 print(f"setting field {field.name} to {put[field.name]}")
                 setattr(auction, field.name, put[field.name])
+                return_value = put[field.name]
+                break
         auction.save()
-        print(f"put request, got auction, {auction}")
-        return HttpResponse('PUT request')
+        print(f"put request, got auction, {auction}, returning {return_value}")
+        return HttpResponse(return_value)
 
 # Auction detail page for sellers
 # - Can edit
@@ -64,10 +69,6 @@ class AuctionSellerView(DetailView):
         self.object = cast(Auction, self.get_object())
         
         context = self.get_context_data(object=self.object)
-
-        # calculate interesting stats for sellers about this auction
-        context["average_price"] = self.object.calculate_total_average_bid()
-        context["winning_average_price"] = self.object.calculate_winning_average_bid()
 
         template = loader.get_template('auction/auction_stats.html')
         return HttpResponse(template.render(context, request))

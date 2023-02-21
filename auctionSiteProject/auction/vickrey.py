@@ -6,6 +6,9 @@ class BidProtocol(Protocol):
     price: int
     id: int
 
+COMMISSION_RECCO_DIFF_PERC = 150
+LARGER_RUN_RECCO_DIFF_PERC = 200
+
 # Example generic use of this could be via a dataclass instead of django model:
 """
 from dataclasses import dataclass
@@ -33,11 +36,25 @@ def get_winning_price(top_n:int, bids: List[BidProtocol]) -> float:
     desc_price = sorted(bids, key=lambda bid: bid.price) 
     return desc_price[top_n+1].price
 
-def get_recommendations(bids: List[BidProtocol]) -> List[str]:
-    return [
-        f"The top X bids were X% higher than the average price, consider commisions?", 
-        f"The average price of all bids was $XYZ",
-        f"The average price of the top n bids was $XYZ",
-        f"There was X times as many bids as the number of items for sale, consider a run of X items at the average price of $XYZ",
-    ]
-    pass
+def get_recommendations(top_n:int, bids: List[BidProtocol]) -> List[str]:
+    average_bid = calculate_average_bid(bids)
+    # top_n_average_bid = calculate_top_n_average_bid(top_n, bids)
+    top_bids_average_bids_diff = get_top_bid_average_bid_diff(top_n, bids)
+    
+    recommendations: List[str] = []
+    if top_bids_average_bids_diff > COMMISSION_RECCO_DIFF_PERC:
+        recommendations.append(f"The top {top_n} bids were {top_bids_average_bids_diff:.2f}% higher than the average price, consider commisions?")
+
+    bid_quantity_diff = get_bid_quantity_diff(top_n, bids)
+    if  bid_quantity_diff > LARGER_RUN_RECCO_DIFF_PERC:
+        recommendations.append(f"There was {bid_quantity_diff:.2f}% as many bids as the number of items for sale, consider a run of {len(bids)} items at the average price of {average_bid}",)
+
+    return recommendations
+
+def get_top_bid_average_bid_diff(top_n:int, bids: List[BidProtocol]):
+    average_bid = calculate_average_bid(bids)
+    top_n_average_bid = calculate_top_n_average_bid(top_n, bids)
+    return top_n_average_bid / average_bid * 100
+
+def get_bid_quantity_diff(top_n:int, bids:List[BidProtocol]):
+    return len(bids) / top_n * 100
