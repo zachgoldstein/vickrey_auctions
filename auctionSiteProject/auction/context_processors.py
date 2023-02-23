@@ -7,12 +7,9 @@ These are referenced from the 'context_processors' option of the configuration
 of a DjangoTemplates backend and used by RequestContext.
 """
 
-import itertools
-
 from django.conf import settings
-from django.utils.functional import SimpleLazyObject, lazy
 
 def site_constants(request):
     return {
-        "site_title": "Auction Site"
+        "site_title": settings.DEFAULT_SITE_NAME
     }

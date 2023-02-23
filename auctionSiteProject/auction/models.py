@@ -81,8 +81,12 @@ class Auction(models.Model):
         return f"{random.choice(random_pics)}/1200/800"
 
     @property
-    def absolute_url(self):
+    def relative_url(self):
         return reverse('auction_detail', args=[str(self.id)])
+    
+    @property
+    def absolute_url(self):
+        return f"http://{settings.DEFAULT_SITE_DOMAIN}{self.relative_url}"
 
     def __str__(self):
         return self.title
