@@ -1,8 +1,9 @@
 from django.db import models
 from django.urls import reverse
-from typing import List
+from django.db.models.functions import Coalesce
 
 import random
+from typing import List
 from auction.vickrey import calculate_average_bid, calculate_top_n_average_bid, get_winning_bids, get_winning_price, get_recommendations
 
 random_pics = [
@@ -24,9 +25,27 @@ class Bid(models.Model):
     def __str__(self):
         return f"Bid({self.id}) price: {self.price} for auction {self.auction.id}"
 
+class ActiveAuctionManager(models.Manager):
+    def get_queryset(self):
+        return super(ActiveAuctionManager, self).get_queryset().filter(
+            status='active'
+        )
+        
+    def complete_auctions(self):
+        # find all the auctions that are not complete and have end_time in the past
+        # call complete()
+        pass
+
+    # def with_counts(self):
+    #     return self.annotate(
+    #         num_responses=Coalesce(models.Count("response"), 0)
+    #     )
+
 class Auction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+    active = ActiveAuctionManager()
     
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -69,6 +88,9 @@ class Auction(models.Model):
     def winning_bid_price(self) -> float:
         return get_winning_price(self.num_items, list(self.bid_set.all()))
 
+    def complete():
+        # mark auction as 'complete'
+        pass
 
     # def calculate_top_average_bids(self) -> float:
     #     # find n top auction.num_items bids

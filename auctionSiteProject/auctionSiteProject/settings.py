@@ -143,3 +143,18 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_BROKER_URL = "redis://localhost:6379/0"
 CELERY_RESULT_EXTENDED = True
+
+# Email settings:
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+if DEBUG:
+    # using smtpd locally:
+    EMAIL_HOST = 'localhost'
+    EMAIL_PORT = 1025
+    EMAIL_HOST_USER = ''
+    EMAIL_HOST_PASSWORD = ''
+    EMAIL_USE_TLS = False
+    DEFAULT_FROM_EMAIL = 'testing@example.com'
+
+    EMAIL_FROM_ADDRESS = 'localdev@vickrey.com'

@@ -1,18 +1,15 @@
-# Create your tasks here
-
 from datetime import datetime, timedelta
 import json
-
-from auction.models import Auction
 
 from celery import shared_task, Celery, Signature
 from celery.utils.abstract import CallableSignature
 from celery.schedules import crontab
-
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
 
-
 from auctionSiteProject.celery import app
+from auction.models import Auction
+
+from auction.services import complete_all_auctions_and_notify
 
 @app.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs):
@@ -70,14 +67,12 @@ def add(x, y):
     z = x + y
     print(z)
 
-@app.task(name = "expire auction")
-def auction_complete():
-    # find all the auctions that have end_time in the past
-    # send notifications to all winning bids
-    # send notifications to all losing bids
-    # send notifications to seller
-    # mark auction as complete
-    pass
+@app.task(name = "complete_auctions")
+def auctions_complete():
+    active_auctions = Auction.active.all()
+    active_auctions_ids = [auction.id for auction in active_auctions]
+    sent_emails = complete_all_auctions_and_notify()
+    f"Attempted to complete all active auctions {active_auctions_ids} and sent emails to {sent_emails}"
 
 @shared_task
 def mul(x, y):
