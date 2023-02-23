@@ -27,10 +27,15 @@ def calculate_top_n_average_bid(top_n:int, bids: List[BidProtocol]) -> float:
     desc_price = sorted(bids, key=lambda bid: bid.price) 
     return fmean([bid.price for bid in bids[:top_n]])
 
-# # get top auction.num_items + 1 bid
+# get top auction.num_items + 1 bid
 def get_winning_bids(top_n:int, bids: List[BidProtocol]) -> List[BidProtocol]:
     desc_price = sorted(bids, key=lambda bid: bid.price, reverse=True) 
     return desc_price[:top_n]
+
+# get top auction.num_items + 1 bid
+def get_losing_bids(top_n:int, bids: List[BidProtocol]) -> List[BidProtocol]:
+    desc_price = sorted(bids, key=lambda bid: bid.price, reverse=True) 
+    return desc_price[top_n:]
 
 def get_winning_price(top_n:int, bids: List[BidProtocol]) -> float:
     desc_price = sorted(bids, key=lambda bid: bid.price) 

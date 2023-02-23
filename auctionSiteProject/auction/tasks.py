@@ -55,6 +55,17 @@ def setup_periodic_tasks(sender, **kwargs):
         start_time = datetime.utcnow()
     )
 
+    schedule_min, created = IntervalSchedule.objects.get_or_create(
+        every=1,
+        period=IntervalSchedule.MINUTES,
+    )
+    PeriodicTask.objects.create(
+        interval=schedule_min,
+        name='Complete active auctions',
+        task='complete_auctions',
+        args=json.dumps([]),
+        start_time = datetime.utcnow()
+    )
 
     print("ran setup periodic tasks...")
 
@@ -67,12 +78,13 @@ def add(x, y):
     z = x + y
     print(z)
 
+# Find all active auctions that are expired and complete them
 @app.task(name = "complete_auctions")
 def auctions_complete():
-    active_auctions = Auction.active.all()
-    active_auctions_ids = [auction.id for auction in active_auctions]
     sent_emails = complete_all_auctions_and_notify()
-    f"Attempted to complete all active auctions {active_auctions_ids} and sent emails to {sent_emails}"
+    results = f"Attempted to complete auctions {Auction.have_completed.ids} and sent emails to {sent_emails}"
+    print(results)
+    return results
 
 @shared_task
 def mul(x, y):

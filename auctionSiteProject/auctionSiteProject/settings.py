@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'django_extensions',
     'auction.apps.AuctionConfig',
     'tailwind',
@@ -158,3 +159,8 @@ if DEBUG:
     DEFAULT_FROM_EMAIL = 'testing@example.com'
 
     EMAIL_FROM_ADDRESS = 'localdev@vickrey.com'
+
+# To get absolute url for a model object without a ref to request
+SITE_ID = 1
+DEFAULT_SITE_DOMAIN = "auction-site.com"
+DEFAULT_SITE_NAME = "Vickrey Auctions"
