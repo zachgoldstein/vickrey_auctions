@@ -1,14 +1,83 @@
 # Create your tasks here
 
+from datetime import datetime, timedelta
+import json
+
 from auction.models import Auction
 
-from celery import shared_task
+from celery import shared_task, Celery, Signature
+from celery.utils.abstract import CallableSignature
+from celery.schedules import crontab
+
+from django_celery_beat.models import PeriodicTask, IntervalSchedule
 
 
-@shared_task
+from auctionSiteProject.celery import app
+
+@app.on_after_finalize.connect
+def setup_periodic_tasks(sender, **kwargs):
+    print("running setup for periodic tasks...")
+    # without celery_beat...
+
+    # # Calls test('hello') every 10 seconds.
+    # sender.add_periodic_task(10.0, test.s('hello'), name='add every 10')
+
+    # # Calls test('world') every 30 seconds
+    # sender.add_periodic_task(30.0, test.s('world'), expires=10)
+
+    # # Executes every Monday morning at 7:30 a.m.
+    # sender.add_periodic_task(
+    #     crontab(hour=7, minute=30, day_of_week=1),
+    #     test.s('Happy Mondays!'),
+    # )
+
+    # with celery beat....
+    schedule, created = IntervalSchedule.objects.get_or_create(
+        every=10,
+        period=IntervalSchedule.SECONDS,
+    )
+    PeriodicTask.objects.create(
+        interval=schedule,                  # we created this above.
+        name='Testing periodic task... test_task',          # simply describes this periodic task.
+        task='test_task',  # name of task.
+        args=json.dumps(['this is a test']),
+        # kwargs=json.dumps({
+        # 'be_careful': True,
+        # }),
+        # expires=datetime.utcnow() + timedelta(seconds=30,
+        start_time = datetime.utcnow()
+    )
+    PeriodicTask.objects.create(
+        interval=schedule,                  # we created this above.
+        name='Testing periodic task... add_task',          # simply describes this periodic task.
+        task='add_task',  # name of task.
+        args=json.dumps([3, 8]),
+        kwargs=json.dumps({
+        }),
+        expires=datetime.utcnow() + timedelta(seconds=30),
+        start_time = datetime.utcnow()
+    )
+
+
+    print("ran setup periodic tasks...")
+
+@app.task(name = "test_task")
+def test(arg):
+    print(arg)
+
+@app.task(name = "add_task")
 def add(x, y):
-    return x + y
+    z = x + y
+    print(z)
 
+@app.task(name = "expire auction")
+def auction_complete():
+    # find all the auctions that have end_time in the past
+    # send notifications to all winning bids
+    # send notifications to all losing bids
+    # send notifications to seller
+    # mark auction as complete
+    pass
 
 @shared_task
 def mul(x, y):

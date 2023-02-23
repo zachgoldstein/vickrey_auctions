@@ -5,3 +5,4 @@ pyvenv.cfg
 db.sqlite3
 auctionSiteProject/theme/static/css/dist
 settings.json
+django.db
