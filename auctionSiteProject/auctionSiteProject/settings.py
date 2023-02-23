@@ -166,3 +166,13 @@ if DEBUG:
 SITE_ID = 1
 DEFAULT_SITE_DOMAIN = "auction-site.com"
 DEFAULT_SITE_NAME = "Vickrey Auctions"
+
+def show_toolbar(request):
+    if DEBUG:
+        return False
+
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": show_toolbar,
+}
+
+LOGIN_REDIRECT_URL = '/'

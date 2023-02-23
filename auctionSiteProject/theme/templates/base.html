@@ -1,6 +1,6 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{% block html_class %} {% endblock html_class %}">
 	<head>
     <title>{% block title %}Base Title{% endblock %}</title>
 		<meta charset="UTF-8">
@@ -16,7 +16,7 @@
 		{% block styles %} {% endblock styles %}
 	</head>
 	{% csrf_token %}
-	<body class="">
+	<body class="{% block body_class %} {% endblock body_class %}">
 		{% block header %} {% endblock header %}
 		{% block content %}{% endblock content %}
 		{% block footer %}{% endblock footer %}

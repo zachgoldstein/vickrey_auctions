@@ -9,6 +9,9 @@ from auction.views import AuctionView, AuctionListView, AuctionCreateView, Aucti
 # Bid views
 from auction.views import BidListView, BidCreateView
 
+# Application views
+# from views import loginView
+
 # JSON views
 from auction.views import BidDataView
 
@@ -21,6 +24,10 @@ urlpatterns = [
     path('auctions/<int:pk>/seller', AuctionSellerView.as_view(), name="auction_detail_seller"),
     path('auctions', AuctionListView.as_view(), name="auction_list"),
     path('auctions/create', AuctionCreateView.as_view(), name="auction_create"),
+
+    # Application views
+    path('accounts/register/', views.register, name='login'),
+
 
     # JSON endpoint for auction chart data
     path('auctions/<int:pk>/prices', BidDataView.as_view(), name="auction_price_data"),

@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest
 from django.http import QueryDict
 from django.views.generic import ListView, DetailView
@@ -6,12 +7,13 @@ from django.views import View
 from django.template import loader
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
+from django.contrib.auth.models import Group, Permission, User
+from django.urls import reverse
 
 from time import time
 from typing import cast, List
 
 from auction.models import Bid, Auction
-
 
 class BidListView(ListView):
     model = Bid
@@ -98,6 +100,31 @@ def index(request):
         'bids': allBids,
     }
     return HttpResponse(template.render(context, request))
+
+def register(request):
+    username = request.POST['username']
+    email = f"{username}@dummy.com"
+    password = request.POST['password']
+    
+    # Does user exist??
+    existing_user = User.objects.filter(username=username)
+    if existing_user:
+        print(f"user with username {username} already exists")
+        return redirect(reverse('login'))
+    print(f"creating new user {username}, {password}")
+    
+    # create_user is important, will properly create password and user-centric data
+    user = User.objects.create_user(username=username, password=password, email=email)
+    print(f"created user {user.id}")
+    authed_user = authenticate(request, username=username, password=password)
+    print(f"authed user {authed_user}")
+    if authed_user is not None:
+        print("logging in and redirecting...")
+        login(request, user)
+        return redirect(reverse('index'))
+    else:
+        print("could not authenticate??")
+    return redirect(reverse('login'))
 
 
 # TEMP tesitng out polling below
