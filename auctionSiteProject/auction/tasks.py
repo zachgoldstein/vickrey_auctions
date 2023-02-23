@@ -14,21 +14,6 @@ from auction.services import complete_all_auctions_and_notify
 @app.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs):
     print("running setup for periodic tasks...")
-    # without celery_beat...
-
-    # # Calls test('hello') every 10 seconds.
-    # sender.add_periodic_task(10.0, test.s('hello'), name='add every 10')
-
-    # # Calls test('world') every 30 seconds
-    # sender.add_periodic_task(30.0, test.s('world'), expires=10)
-
-    # # Executes every Monday morning at 7:30 a.m.
-    # sender.add_periodic_task(
-    #     crontab(hour=7, minute=30, day_of_week=1),
-    #     test.s('Happy Mondays!'),
-    # )
-
-    # with celery beat....
     schedule, created = IntervalSchedule.objects.get_or_create(
         every=10,
         period=IntervalSchedule.SECONDS,
