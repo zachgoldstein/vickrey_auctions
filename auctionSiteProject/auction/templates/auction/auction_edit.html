@@ -16,12 +16,15 @@
                 class="mx-auto mt-14 max-w-2xl sm:mt-16 lg:col-span-3 lg:row-span-2 lg:row-end-2 lg:mt-0 lg:max-w-none">
                 <div class="flex flex-col-reverse">
                     <div class="mt-4">
-                        <sl-input name="title" placeholder="{{auction.title}}" size="large" class="title-input text-2xl font-bold"
-                        hx-trigger="keyup changed delay:500ms" 
-                        hx-vals='{"id": {{auction.id}}}' 
-                        hx-put="/auctions/{{auction.id}}/"
-                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                        hx-target=".title-name">
+                        <sl-input name="title"
+                            placeholder="{{auction.title}}"
+                            size="large"
+                            class="title-input text-2xl font-bold"
+                            hx-trigger="keyup changed delay:500ms" 
+                            hx-vals='{"id": {{auction.id}}}' 
+                            hx-put="/auctions/{{auction.id}}/"
+                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                            hx-target=".title-name">
                         </sl-input>
                     </div>
                 </div>

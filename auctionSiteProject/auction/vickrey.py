@@ -14,7 +14,7 @@ LARGER_RUN_RECCO_DIFF_PERC = 200
 from dataclasses import dataclass
 
 @dataclass
-class TestDummyBid():
+class GenericBid():
     price: int
     id: int
 """
