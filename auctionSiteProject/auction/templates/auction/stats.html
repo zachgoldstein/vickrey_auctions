@@ -1,0 +1,20 @@
+<div class="prose prose-sm mt-4 text-gray-500">
+    <p>Last Updated: {{now}}</p>
+    <p>Things for sale in auction: {{auction.num_items}}</p>
+    <p>Average Price: ${{auction.total_average_bid|floatformat:2}}</p>
+    <p>Average Price of Winning Bids: ${{auction.winning_average_bid|floatformat:2}}</p>
+    <p>All winning buyers will pay ${{auction.winning_bid_price|floatformat:2}}</p>
+    <h3>Winning Bids:</h3>
+    {% for bid in auction.winning_bids %}
+        <p>{{bid}}</p>
+    {% endfor %}
+
+    <h3>Recommendations</h3>
+    {% for recommendation in auction.recommendations %}
+        <p>{{recommendation}}</p>
+    {% endfor %}
+    <h3>All Bids:</h3>
+    {% for bid in auction.bid_set.all %}
+        <p>{{bid}}</p>
+    {% endfor %}
+</div>

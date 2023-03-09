@@ -11,6 +11,7 @@ from django.contrib.auth.models import Group, Permission, User
 from django.urls import reverse
 
 from time import time
+from datetime import datetime
 from typing import cast, List
 
 from auction.models import Bid, Auction
@@ -22,7 +23,7 @@ class BidCreateView(DetailView):
     model = Bid
 
     def post(self, request, *args, **kwargs):
-        post = QueryDict(request.body) 
+        post = QueryDict(request.body)
         print(post)       
         auction = Auction.objects.get(id=post["auction-id"])
         auction.bid_set.create(price=post["bid-value"])
@@ -75,9 +76,24 @@ class AuctionSellerView(DetailView):
         template = loader.get_template('auction/auction_stats.html')
         return HttpResponse(template.render(context, request))
 
+class AuctionStatsView(DetailView):
+    model = Auction
+
+    def get(self, request, *args, **kwargs):
+        self.object = cast(Auction, self.get_object())
+        
+        context = self.get_context_data(object=self.object)
+        context["now"] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+        print(f"context: {context}")
+
+        template = loader.get_template('auction/stats.html')
+        return HttpResponse(template.render(context, request))
 
 class AuctionListView(ListView):
     model = Auction
+
+    def get(self, request, *args, **kwargs):
+        import pdb; pdb.set_trace()
 
 class AuctionCreateView(DetailView):
     model = Auction

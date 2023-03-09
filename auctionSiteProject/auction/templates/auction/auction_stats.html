@@ -18,18 +18,13 @@
                         {% include "auction/auction_edit.html"%}
                     </sl-tab-panel>
                     <sl-tab-panel name="stats">
-                        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
-                            <div class="prose prose-sm mt-4 text-gray-500">
-                                <p>Things for sale in auction: {{auction.num_items}}
-                                <p>Average Price: ${{auction.total_average_bid|floatformat:2}}</p>
-                                <p>Average Price of Winning Bids: ${{auction.winning_average_bid|floatformat:2}}</p>
-                                <p>All winning buyers will pay ${{auction.winning_bid_price|floatformat:2}}</p>
-                                <p>Winning Bids: {{auction.winning_bids}}}</p>
-                                <h3>Recommendations</h3>
-                                {% for recommendation in auction.recommendations %}
-                                    <p>{{recommendation}}</p>
-                                {% endfor %}
-                            </div>
+                        <div 
+                            class="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2"
+                            hx-get="/auctions/{{auction.id}}/stats" 
+                            hx-trigger="every 1s"
+                            hx-indicator="#spinner"
+                        >
+                        <sl-spinner id="spinner" style="font-size: 5rem; --track-width: 10px;"></sl-spinner>
                         </div>
                     </sl-tab-panel>
                     <sl-tab-panel name="updates">
