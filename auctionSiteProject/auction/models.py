@@ -6,6 +6,7 @@ from django.conf import settings
 
 
 import random
+from statistics import fmean
 from typing import List
 from auction.vickrey import calculate_average_bid, calculate_top_n_average_bid, get_winning_bids, get_losing_bids, get_winning_price, get_recommendations
 
@@ -34,6 +35,10 @@ class ActiveAuctionManager(models.Manager):
         return super(ActiveAuctionManager, self).get_queryset().filter(
             status=Auction.StatusChoices.ACTIVE
         )
+
+    def get_average_num_bids(self):
+        auctions = self.get_queryset().all()
+        return fmean([auction.bid_set.count() for auction in auctions])
 
 # All auctions that are now complete and need to be updated
 class HaveCompletedAuctionManager(models.Manager):
